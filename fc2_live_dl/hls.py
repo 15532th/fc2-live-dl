@@ -2,7 +2,7 @@ import asyncio
 import time
 
 from .fc2 import FC2WebSocket
-from .util import Logger
+from .util import Logger, strip_query
 
 
 class HLSDownloader:
@@ -41,16 +41,16 @@ class HLSDownloader:
 
     async def _fill_queue(self):
         last_fragment_timestamp = time.time()
-        last_fragment = None
+        last_fragment = ''
         frag_idx = 0
         while True:
             try:
                 frags = await self._get_fragment_urls()
-
+                frags_trimmed = [strip_query(fragment) for fragment in frags]
                 new_idx = 0
                 try:
-                    new_idx = 1 + frags.index(last_fragment)
-                except:
+                    new_idx = 1 + frags_trimmed.index(strip_query(last_fragment))
+                except ValueError:
                     pass
 
                 n_new = len(frags) - new_idx
