@@ -158,3 +158,8 @@ def sanitize_filename(fname):
             fname = "_" + fname
 
     return fname
+
+
+def strip_query(url):
+    """Take string containing url and return part before query component"""
+    return url.split('?')[0]
